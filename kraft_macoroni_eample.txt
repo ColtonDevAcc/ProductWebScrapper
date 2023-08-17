@@ -1,0 +1,11 @@
+//this is the gtin13
+UPC = /html/head/script[1]
+Name = /html/head/title/text()
+brand = /html/body/div/div[1]/div/div/div[2]/div/section/main/div[2]/div[2]/div/div[1]/div/div/section[4]/div[2]/div/div/div[1]/div/span
+image = /html/head/script[1]/text()
+description = /html/body/div/div[1]/div/div/div[2]/div/section/main/div[2]/div[2]/div/div[1]/div/div/section[3]/section/section/div[2]/div/div/div[1]/span
+ingredients = /html/body/div/div[1]/div/div/div[2]/div/section/main/div[2]/div[2]/div/div[1]/div/div/section[5]/div[2]/div/div/div[1]/div/span
+listed under this section
+nutritionData = /html/body/div/div[1]/div/div/div[2]/div/section/main/div[2]/div[2]/div/div[1]/div/div/section[2]/section/div[2]/div/div/section
+//example of were calories are located
+/html/body/div/div[1]/div/div/div[2]/div/section/main/div[2]/div[2]/div/div[1]/div/div/section[2]/section/div[2]/div/div/section/div[4]
