@@ -11,19 +11,17 @@ LIMIT_PRODUCTS = 10
 
 def parse_nutrition_details(text):
     nutrients = []
-    serving = {"servingSize": None,
-               "servingSizeUnit": None, "totalServings": None}
 
     if not text:
-        return serving, nutrients
+        return {}, nutrients
 
     lines = text.split('\n')
     for i in range(len(lines)):
         line = lines[i].strip()
         if line.startswith("Amount per serving"):
             serving = {
-                "servingSize": re.findall(r"\d+\.?\d*", lines[i+1])[0] if i+1 < len(lines) else None,
-                "servingSizeUnit": re.findall(r"[a-zA-Z]+", lines[i+1])[0] if i+1 < len(lines) else None,
+                "servingSize": re.findall(r"\d+\.?\d*", lines[i+1])[0],
+                "servingSizeUnit": re.findall(r"[a-zA-Z]+", lines[i+1])[0],
                 "totalServings": 1
             }
         else:
@@ -36,7 +34,6 @@ def parse_nutrition_details(text):
                     "Unit": match.group("unit")
                 }
                 nutrients.append(nutrient)
-
     return serving, nutrients
 
 
@@ -70,10 +67,6 @@ async def extract_product_urls(page):
     return urls
 
 
-def clean_url(url):
-    return url.split('%3')[0]
-
-
 async def extract_product_details_from_url(page, url):
     print(f'Extracting details for: {url}')
     await page.goto(url, timeout=2*60_000)
@@ -102,7 +95,7 @@ async def extract_product_details_from_url(page, url):
     nutrition_table = await page.query_selector('//div[contains(@class, "w_wOcC w_EjQC")]/section/table')
     if nutrition_table:
         nutrition_data = {}
-        rows = await nutrition_table.query_selector_all('xpath=./tr')
+        rows = await nutrition_table.query_selector_all('.//tr')
         for row in rows:
             key_elements = await row.query_selector_all('.//td[1]')
             value_elements = await row.query_selector_all('.//td[2]')
@@ -152,7 +145,7 @@ async def run(playwright):
         urls = await extract_product_urls(page)
 
         # Extract actual product URLs from the tracking URLs
-        urls = [clean_url(extract_actual_url(url))
+        urls = [extract_actual_url(url)
                 for url in urls if extract_actual_url(url)]
 
         # Updated print statement to display the extracted product URLs
